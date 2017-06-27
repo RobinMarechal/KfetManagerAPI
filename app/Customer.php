@@ -16,7 +16,7 @@ class Customer extends Model
         return $this->hasMany('App\Order');
     }
 
-    public function staffMember()
+    public function staff()
     {
         return $this->belongsTo('App\Staff');
     }

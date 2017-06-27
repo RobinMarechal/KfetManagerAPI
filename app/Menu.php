@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class Menu extends Model 
@@ -18,21 +17,14 @@ class Menu extends Model
         return $this->belongsToMany('App\Category');
     }
 
-    public function getOrders()
-    {
-        $orderProducts = OrderProduct::where('menu_id', $this->id)->with('order')->get();
-
-        $coll = new Collection();
-
-        foreach ($orderProducts as $o) {
-            $coll->add($o->order);
-        }
-
-        return $coll->unique();
-    }
-
     public function orderProducts()
     {
         return $this->hasMany('App\OrderProduct');
     }
+
+    public function orders()
+    {
+        return $this->belongsToMany('App\Order', 'order_product');
+    }
+
 }

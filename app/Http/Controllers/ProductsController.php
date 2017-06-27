@@ -6,36 +6,6 @@ use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
-    public function all ()
-    {
-        // TODO
-    }
-
-
-    public function post ()
-    {
-        // TODO
-    }
-
-
-    public function getById ($id)
-    {
-        // TODO
-    }
-
-
-    public function put ($id)
-    {
-        // TODO
-    }
-
-
-    public function delete ($id)
-    {
-        // TODO
-    }
-
-
     public function getOrders ($id)
     {
         // TODO

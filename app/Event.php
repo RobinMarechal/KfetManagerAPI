@@ -23,7 +23,7 @@ class Event extends Model
 
     public function products()
     {
-        return $this->hasManyThrough('App\Product', 'App\EventProduct');
+        return $this->belongsToMany('App\Product');
     }
 
 }

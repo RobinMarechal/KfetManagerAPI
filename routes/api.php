@@ -18,7 +18,6 @@ use Illuminate\Http\Request;
  * @url .../api/kfet/...
  */
 Route::prefix('kfet')->group(function () {
-
     /**
      * get kfet table record by it's ID
      *
@@ -59,13 +58,6 @@ Route::prefix('categories')->group(function () {
      * Create a category
      */
     Route::post('/', 'CategoriesController@post')->name('categories.post');
-
-    /**
-     * search for a category
-     * @urlParam field the field (ex: name, id etc...)
-     * @urlParam value the value of the field
-     */
-    Route::get('search', 'CategoriesController@search')->name("categories.search");
 
     /**
      * The routes related to a specific categories table record
@@ -253,28 +245,26 @@ Route::prefix('products')->group(function () {
 
 
 Route::prefix('events')->group(function () {
+    Route::get('/', 'EventsController@all')->name('events.all');
+    Route::post('/', 'EventsController@post')->name('events.post');
+
     Route::prefix('{id}')->group(function () {
+        Route::get('/', 'EventsController@getById')->name('events.getById');
+        Route::put('/', 'EventsController@put')->name('events.put');
+        Route::delete('/', 'EventsController@delete')->name('events.delete');
+
         Route::prefix('accessories', function () {
         });
         Route::prefix('products', function () {
         });
     });
 
-    Route::prefix('{from}/{to}')->group(function () {
-        Route::prefix('accessories', function () {
-        });
-        Route::prefix('products', function () {
-        });
+    Route::get('{from}/{to}', 'EventsController@getFromTo')->name('events.getFromTo');
+
+    Route::prefix('accessories')->group(function () {
     });
 
-    Route::prefix('accessories')->group(function()
-    {
-
-    });
-
-    Route::prefix('products')->group(function()
-    {
-        
+    Route::prefix('products')->group(function () {
     });
 });
 

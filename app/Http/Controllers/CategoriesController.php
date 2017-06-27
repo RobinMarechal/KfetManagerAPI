@@ -9,74 +9,20 @@ use Illuminate\Http\Response;
 
 class CategoriesController extends Controller
 {
-    public function all ()
-    {
-        $all = $this->getPreparedQuery(Category::class)->get();
-
-        return $all;
-    }
-
-
-    public function getById ($id)
-    {
-        $cat = $this->getRelationsQuery(Category::class)->find($id);
-
-        return $cat;
-    }
-
-
-    public function put ($id)
-    {
-        $cat = Category::find($id);
-
-        if ($cat == null) {
-            return \response()->json(null, Response::HTTP_BAD_REQUEST);
-        }
-
-        $cat->update($this->request->all());
-
-        return \response()->json($cat, Response::HTTP_OK);
-    }
-
-
-    public function delete ($id)
-    {
-        $cat = Category::find($id);
-
-        if ($cat == null) {
-            return \response()->json(null, Response::HTTP_BAD_REQUEST);
-        }
-
-        $cat->delete();
-
-        $cats = Category::all();
-
-        return \response()->json($cats, Response::HTTP_OK);
-    }
-
-
-    public function search ()
-    {
-        $field = $this->request->get('field');
-        $value = $this->request->get('value');
-
-        if ($field != "id") {
-            $cats = Category::where($field, "LIKE", "%" . $value . "%")->get();
-        }
-        else {
-            $cats = Category::find($value);
-        }
-
-        return \response()->json($cats, Response::HTTP_OK);
-    }
-
-
-    public function post ()
-    {
-        $cat = Category::create($this->request->post);
-
-        return $cat;
-    }
+    //    public function search ()
+    //    {
+    //        $field = $this->request->get('field');
+    //        $value = $this->request->get('value');
+    //
+    //        if ($field != "id") {
+    //            $cats = Category::where($field, "LIKE", "%" . $value . "%")->get();
+    //        }
+    //        else {
+    //            $cats = Category::find($value);
+    //        }
+    //
+    //        return \response()->json($cats, Response::HTTP_OK);
+    //    }
 
 
     public function getMenus ($id)
@@ -120,8 +66,7 @@ class CategoriesController extends Controller
             $this->request->computeUrlParams($query);
         }])->find($id);
 
-        if(!isset($cat))
-        {
+        if (!isset($cat)) {
             return null;
         }
 

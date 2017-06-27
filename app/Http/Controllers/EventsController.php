@@ -2,36 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Event;
 use Illuminate\Http\Request;
 
 class EventsController extends Controller
 {
-    public function all ()
+    public function getFromTo($from, $to)
     {
-        // TODO
-    }
-
-
-    public function post ()
-    {
-        // TODO
-    }
-
-
-    public function getById ($id)
-    {
-        // TODO
-    }
-
-
-    public function put ($id)
-    {
-        // TODO
-    }
-
-
-    public function delete ($id)
-    {
-        // TODO
+        return $this->defaultGetFromTo(Event::class, $from, $to, 'date');
     }
 }

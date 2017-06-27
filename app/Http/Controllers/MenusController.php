@@ -6,18 +6,6 @@ use App\Menu;
 
 class MenusController extends Controller
 {
-    public function all ()
-    {
-        // TODO
-    }
-
-
-    public function post ()
-    {
-        // TODO
-    }
-
-
     public function getById ($id)
     {
         $withOrder = false;
@@ -43,18 +31,6 @@ class MenusController extends Controller
         }
 
         return response()->json($array);
-    }
-
-
-    public function put ($id)
-    {
-        // TODO
-    }
-
-
-    public function delete ($id)
-    {
-        // TODO
     }
 
 
