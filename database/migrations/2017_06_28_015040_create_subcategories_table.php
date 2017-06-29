@@ -11,7 +11,7 @@ class CreateSubcategoriesTable extends Migration {
 			$table->increments('id');
 			$table->integer('category_id')->unsigned()->nullable();
 			$table->string('name', 255)->unique();
-			$table->decimal('price')->default('0');
+			$table->float('price')->default('0');
 		});
 	}
 

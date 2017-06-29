@@ -2,15 +2,14 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Custom\Model;
 
-class Category extends Model 
+class Category extends Model
 {
 
     protected $table = 'categories';
     public $timestamps = false;
     protected $fillable = array('name');
-    protected $hidden = ['pivot'];
 
     public function subcategories()
     {

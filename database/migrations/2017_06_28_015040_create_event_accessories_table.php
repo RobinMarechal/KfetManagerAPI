@@ -11,7 +11,7 @@ class CreateEventAccessoriesTable extends Migration {
 			$table->increments('id');
 			$table->integer('event_id')->unsigned()->nullable();
 			$table->string('name', 255);
-			$table->decimal('cost')->default('0');
+			$table->float('cost')->default('0');
 			$table->integer('quantity')->default('1');
 		});
 	}

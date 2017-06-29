@@ -9,7 +9,7 @@ class CreateEventsTable extends Migration {
 	{
 		Schema::create('events', function(Blueprint $table) {
 			$table->increments('id');
-			$table->date('date');
+			$table->date('date')->nullable();
 			$table->text('description');
 		});
 	}

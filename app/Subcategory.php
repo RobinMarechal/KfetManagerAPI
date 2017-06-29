@@ -2,11 +2,10 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Custom\Model;
 
 class Subcategory extends Model 
 {
-
     protected $table = 'subcategories';
     public $timestamps = false;
     protected $fillable = array('category_id', 'name', 'price');

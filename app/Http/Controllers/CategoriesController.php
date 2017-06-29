@@ -3,67 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Menu;
+use App\Product;
 use App\Subcategory;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * All the routes directly related to the categories table and its relations
+ * @url .../api/categories/...
+ */
 class CategoriesController extends Controller
 {
-    //    public function search ()
-    //    {
-    //        $field = $this->request->get('field');
-    //        $value = $this->request->get('value');
-    //
-    //        if ($field != "id") {
-    //            $cats = Category::where($field, "LIKE", "%" . $value . "%")->get();
-    //        }
-    //        else {
-    //            $cats = Category::find($value);
-    //        }
-    //
-    //        return \response()->json($cats, Response::HTTP_OK);
-    //    }
-
-
-    public function getMenus ($id)
+    public function getMenus ($id, $menuId = null)
     {
-        $menus = Category::with('menus', 'menus.orderProducts.order')->find($id)->menus;
-
-        $arrRes = [];
-
-        foreach ($menus as $m) {
-            $orderProds = $m->orderProducts;
-
-            $orders = new Collection();
-            foreach ($orderProds as $o) {
-                $orders->add($o['order']);
-            }
-
-            $orders = $orders->unique();
-
-            $arr = $m->toArray();
-            unset($arr['order_products']);
-            $arr['orders'] = $orders;
-
-            $arrRes[] = $arr;
-        }
-
-        return $arrRes;
+        $resp = $this->defaultGetRelationResultOfId(Category::class, $id, Menu::class, 'menus', $menuId);
+        return response()->json($resp->getData(), $resp->getCode());
     }
 
 
-    public function getSubcategories ($id)
+    public function getSubcategories ($id, $subcategoryId = null)
     {
-        $coll = $this->request->getPreparedQuery(Subcategory::class)->where('category_id', $id)->get();
-
-        return $coll;
+        $resp = $this->defaultGetRelationResultOfId(Category::class, $id, Subcategory::class, 'subcategories', $subcategoryId);
+        return response()->json($resp->getData(), $resp->getCode());
     }
 
 
-    public function getProducts ($id)
+    public function getProducts ($id, $productId = null)
     {
         $cat = Category::with(['subcategories.products' => function ($query) {
-            $this->request->computeUrlParams($query);
+            $this->request->applyUrlParams($query, Product::class);
         }])->find($id);
 
         if (!isset($cat)) {
@@ -85,8 +54,13 @@ class CategoriesController extends Controller
             }
         }
 
-        $products = $coll;
+        if ($productId != null) {
+            $res = $coll->where('id', $productId)->first();
+        }
+        else {
+            $res = $coll;
+        }
 
-        return $products;
+        return \response()->json($res, Response::HTTP_OK);
     }
 }

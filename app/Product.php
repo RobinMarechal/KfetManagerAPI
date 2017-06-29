@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Custom\Model;
 
 class Product extends Model 
 {
@@ -10,7 +10,6 @@ class Product extends Model
     protected $table = 'products';
     public $timestamps = false;
     protected $fillable = array('name', 'description', 'price', 'quantity', 'subcategory_id');
-    protected $hidden = ['pivot'];
 
     public function restockings()
     {

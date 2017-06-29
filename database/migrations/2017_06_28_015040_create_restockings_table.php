@@ -3,20 +3,20 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateMenusTable extends Migration {
+class CreateRestockingsTable extends Migration {
 
 	public function up()
 	{
-		Schema::create('menus', function(Blueprint $table) {
+		Schema::create('restockings', function(Blueprint $table) {
 			$table->increments('id');
-			$table->string('name', 255);
+			$table->date('date')->nullable();
+			$table->float('cost')->default('0');
 			$table->text('description');
-			$table->decimal('price')->default('0');
 		});
 	}
 
 	public function down()
 	{
-		Schema::drop('menus');
+		Schema::drop('restockings');
 	}
 }

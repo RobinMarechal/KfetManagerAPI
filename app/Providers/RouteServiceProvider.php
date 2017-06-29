@@ -27,6 +27,19 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::pattern('id', '[0-9]+');
 
+        Route::pattern('menuId', '[0-9]+');
+        Route::pattern('restockingId', '[0-9]+');
+        Route::pattern('accessoryId', '[0-9]+');
+        Route::pattern('subcategoryId', '[0-9]+');
+        Route::pattern('categoryId', '[0-9]+');
+        Route::pattern('productId', '[0-9]+');
+        Route::pattern('orderId', '[0-9]+');
+        Route::pattern('orderProductId', '[0-9]+');
+        Route::pattern('eventProductId', '[0-9]+');
+        Route::pattern('staffId', '[0-9]+');
+        Route::pattern('customerId', '[0-9]+');
+        Route::pattern('eventId', '[0-9]+');
+
         parent::boot();
     }
 

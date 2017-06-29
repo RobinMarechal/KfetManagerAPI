@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Customer;
+use App\Staff;
 
 class StaffController extends Controller
 {
-    public function getCustomers ()
-    {
-        // TODO
-    }
-
     public function getCustomer ($id)
     {
-        // TODO
+        $resp = $this->defaultGetRelationResult(Staff::class, $id, 'customer');
+
+        return response()->json($resp->getData(), $resp->getCode());
     }
 }

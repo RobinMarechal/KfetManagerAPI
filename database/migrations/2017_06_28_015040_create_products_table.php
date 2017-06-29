@@ -11,7 +11,7 @@ class CreateProductsTable extends Migration {
 			$table->increments('id');
 			$table->string('name', 255)->unique();
 			$table->text('description');
-			$table->decimal('price')->default('0');
+			$table->float('price')->default('0');
 			$table->integer('quantity')->default('0');
 			$table->integer('subcategory_id')->unsigned()->nullable();
 		});

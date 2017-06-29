@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Kfet;
-use Carbon\Carbon;
-use Helpers\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 class KfetController extends Controller
 {
@@ -14,7 +11,7 @@ class KfetController extends Controller
     {
         $obj = Kfet::orderBy('id', 'DESC')->first();
 
-        return $obj;
+        return \response()->json($obj, Response::HTTP_OK);
     }
 
 
@@ -22,6 +19,6 @@ class KfetController extends Controller
     {
         $obj = Kfet::orderBy('id', 'asc')->first();
 
-        return $obj;
+        return \response()->json($obj, Response::HTTP_OK);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Custom\Model;
 
 class MoneyAdding extends Model 
 {
@@ -10,5 +10,6 @@ class MoneyAdding extends Model
     protected $table = 'money_addings';
     public $timestamps = false;
     protected $fillable = array('date', 'amount', 'reason', 'description');
+    public $temporalField = 'date';
 
 }

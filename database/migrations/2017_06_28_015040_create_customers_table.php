@@ -12,7 +12,7 @@ class CreateCustomersTable extends Migration {
 			$table->string('firstname', 255);
 			$table->string('lastname', 255);
 			$table->integer('staff_id')->unsigned()->nullable();
-			$table->decimal('balance')->default('0');
+			$table->float('balance')->default('0');
 		});
 	}
 

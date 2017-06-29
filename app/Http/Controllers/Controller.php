@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UrlRequest;
 use Carbon\Carbon;
+use Helpers\ResponseData;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -43,7 +45,7 @@ abstract class Controller extends BaseController
     {
         $all = $this->getPreparedQuery($class)->get();
 
-        return $all;
+        return new ResponseData($all, Response::HTTP_OK);
     }
 
 
@@ -51,7 +53,7 @@ abstract class Controller extends BaseController
     {
         $cat = $this->getRelationsQuery($class)->find($id);
 
-        return $cat;
+        return new ResponseData($cat, Response::HTTP_OK);
     }
 
 
@@ -60,7 +62,7 @@ abstract class Controller extends BaseController
         $cat = $class::find($id);
 
         if ($cat == null) {
-            return \response()->json(null, Response::HTTP_BAD_REQUEST);
+            return new ResponseData(null, Response::HTTP_BAD_REQUEST);
         }
 
         $cat->update($this->request->all());
@@ -71,7 +73,7 @@ abstract class Controller extends BaseController
             $res = $this->all();
         }
 
-        return \response()->json($res, Response::HTTP_OK);
+        return new ResponseData($res, Response::HTTP_OK);
     }
 
 
@@ -80,7 +82,7 @@ abstract class Controller extends BaseController
         $cat = $class::find($id);
 
         if ($cat == null) {
-            return \response()->json(null, Response::HTTP_BAD_REQUEST);
+            return new ResponseData(null, Response::HTTP_BAD_REQUEST);
         }
 
         $cat->delete();
@@ -91,7 +93,7 @@ abstract class Controller extends BaseController
             $res = $this->all();
         }
 
-        return \response()->json($res, Response::HTTP_OK);
+        return new ResponseData($res, Response::HTTP_OK);
     }
 
 
@@ -105,7 +107,7 @@ abstract class Controller extends BaseController
             $res = $this->all();
         }
 
-        return \response()->json($res, Response::HTTP_CREATED);
+        return new ResponseData($res, Response::HTTP_CREATED);
     }
 
 
@@ -114,9 +116,43 @@ abstract class Controller extends BaseController
         $fromCarbon = Carbon::parse($from);
         $toCarbon = Carbon::parse($to);
 
-        $array = $class::whereBetween($field, [$fromCarbon, $toCarbon])->get();
 
-        return $array;
+        $array = $this->request->getPreparedQuery($class)->whereBetween($field, [$fromCarbon, $toCarbon])->get();
+
+        return new ResponseData($array, Response::HTTP_OK);
+    }
+
+
+    public function defaultGetRelationResult ($class, $id, $relationName)
+    {
+        $model = $class::with([$relationName => function ($query) use ($class) {
+            $this->request->applyUrlParams($query, $class);
+        }])->find($id);
+
+        if (!isset($model)) {
+            return new ResponseData(null, Response::HTTP_NOT_FOUND);
+        }
+
+        return new ResponseData($model->$relationName, Response::HTTP_OK);
+    }
+
+
+    public function defaultGetRelationResultOfId ($class, $id, $relationClass, $relationName, $relationId = null)
+    {
+        if ($relationId == null) {
+            return $this->defaultGetRelationResult($class, $id, $relationName);
+        }
+
+        $tmp = $class::with([$relationName => function ($query) use ($relationId, $relationClass) {
+            $this->request->applyUrlParams($query, $relationClass);
+        }])->where((new $class())->getTable() . '.id', $id)->first();
+
+
+        if (!isset($tmp)) {
+            return new ResponseData(null, Response::HTTP_NOT_FOUND);
+        }
+
+        return new ResponseData($tmp->$relationName->where('id', "=", $relationId)->first(), Response::HTTP_OK);
     }
 
 
@@ -125,42 +161,54 @@ abstract class Controller extends BaseController
     public function all ()
     {
         $class = getRelatedModelClassName($this);
-        return $this->defaultAll($class);
+        $resp = $this->defaultAll($class);
+
+        return \response()->json($resp->getData(), $resp->getCode());
     }
 
 
     public function getById ($id)
     {
         $class = getRelatedModelClassName($this);
-        return $this->defaultGetById($class, $id);
+        $resp = $this->defaultGetById($class, $id);
+
+        return \response()->json($resp->getData(), $resp->getCode());
     }
 
 
     public function getFromTo ($from, $to)
     {
         $class = getRelatedModelClassName($this);
-        return $this->defaultGetFromTo($class, $from, $to);
+        $resp = $this->defaultGetFromTo($class, $from, $to);
+
+        return \response()->json($resp->getData(), $resp->getCode());
     }
 
 
     public function put ($id)
     {
         $class = getRelatedModelClassName($this);
-        return $this->defaultPut($class, $id);
+        $resp = $this->defaultPut($class, $id);
+
+        return \response()->json($resp->getData(), $resp->getCode());
     }
 
 
     public function delete ($id)
     {
         $class = getRelatedModelClassName($this);
-        return $this->defaultDelete($class, $id);
+        $resp = $this->defaultDelete($class, $id);
+
+        return \response()->json($resp->getData(), $resp->getCode());
     }
 
 
     public function post ()
     {
         $class = getRelatedModelClassName($this);
-        return $this->defaultPost($class);
+        $resp = $this->defaultPost($class);
+
+        return \response()->json($resp->getData(), $resp->getCode());
     }
 
 

@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Custom\Model;
 
 class EventAccessory extends Model 
 {

@@ -11,8 +11,8 @@ class CreateEventProductsTable extends Migration {
 			$table->increments('id');
 			$table->integer('product_id')->unsigned()->nullable();
 			$table->integer('event_id')->unsigned()->nullable();
-			$table->decimal('cost')->default('0');
-			$table->decimal('price')->default('0');
+			$table->float('cost')->default('0');
+			$table->float('price')->default('0');
 			$table->integer('quantity_sold')->default('0');
 			$table->integer('quantity_bought')->default('0');
 			$table->string('name', 255);

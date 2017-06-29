@@ -24,7 +24,7 @@
         },
         "files": [
             "app/Http/helpers.php",
-            "app/Http/Helpers/JsonResponse.php"
+            "app/Http/Helpers/ResponseData.php"
         ]
     },
     "autoload-dev": {

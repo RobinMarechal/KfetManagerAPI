@@ -9,8 +9,8 @@ class CreateMoneyAddingsTable extends Migration {
 	{
 		Schema::create('money_addings', function(Blueprint $table) {
 			$table->increments('id');
-			$table->date('date');
-			$table->decimal('amount')->default('0');
+			$table->date('date')->nullable();
+			$table->float('amount')->default('0');
 			$table->string('reason', 255);
 			$table->text('description');
 		});

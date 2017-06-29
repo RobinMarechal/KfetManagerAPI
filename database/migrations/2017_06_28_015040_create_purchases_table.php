@@ -9,9 +9,9 @@ class CreatePurchasesTable extends Migration {
 	{
 		Schema::create('purchases', function(Blueprint $table) {
 			$table->increments('id');
-			$table->decimal('cost')->default('0');
+			$table->float('cost')->default('0');
 			$table->integer('quantity')->default('1');
-			$table->date('date');
+			$table->date('date')->nullable();
 			$table->text('description');
 		});
 	}

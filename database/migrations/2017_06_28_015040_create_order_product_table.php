@@ -10,9 +10,8 @@ class CreateOrderProductTable extends Migration {
 		Schema::create('order_product', function(Blueprint $table) {
 			$table->increments('id');
 			$table->integer('product_id')->unsigned()->nullable();
-			$table->integer('order_id')->unsigned()->nullable();
-			$table->integer('menu_id')->unsigned()->nullable();
-			$table->integer('quantity')->default('1');
+			$table->integer('order_id')->unsigned();
+			$table->integer('quantity')->default('0');
 		});
 	}
 

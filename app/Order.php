@@ -2,15 +2,15 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Custom\Model;
 
 class Order extends Model 
 {
 
     protected $table = 'orders';
     public $timestamps = true;
-    protected $fillable = array('customer_id', 'timestamps');
-    protected $hidden = ['pivot'];
+    protected $fillable = array('customer_id', 'timestamps', 'menu_id');
+    public $temporalField = 'created_at';
 
     public function customer()
     {
@@ -19,7 +19,7 @@ class Order extends Model
 
     public function orderProducts()
     {
-        return $this->hasOne('App\OrderProduct');
+        return $this->hasMany('App\OrderProduct');
     }
 
     public function products()
@@ -27,9 +27,14 @@ class Order extends Model
         return $this->belongsToMany('App\Product');
     }
 
-    public function menus()
+    public function menu()
     {
-        return $this->belongsToMany('App\Menu', 'order_product');
+        return $this->belongsTo('App\Menu');
+    }
+
+    public function detail()
+    {
+        return $this->hasMany('App\OrderProduct');
     }
 
 }

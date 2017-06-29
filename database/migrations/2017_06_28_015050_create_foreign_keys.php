@@ -38,6 +38,11 @@ class CreateForeignKeys extends Migration {
 						->onDelete('set null')
 						->onUpdate('cascade');
 		});
+		Schema::table('orders', function(Blueprint $table) {
+			$table->foreign('menu_id')->references('id')->on('menus')
+						->onDelete('set null')
+						->onUpdate('cascade');
+		});
 		Schema::table('subcategories', function(Blueprint $table) {
 			$table->foreign('category_id')->references('id')->on('categories')
 						->onDelete('set null')
@@ -70,12 +75,7 @@ class CreateForeignKeys extends Migration {
 		});
 		Schema::table('order_product', function(Blueprint $table) {
 			$table->foreign('order_id')->references('id')->on('orders')
-						->onDelete('set null')
-						->onUpdate('cascade');
-		});
-		Schema::table('order_product', function(Blueprint $table) {
-			$table->foreign('menu_id')->references('id')->on('menus')
-						->onDelete('set null')
+						->onDelete('restrict')
 						->onUpdate('cascade');
 		});
 	}
@@ -100,6 +100,9 @@ class CreateForeignKeys extends Migration {
 		Schema::table('orders', function(Blueprint $table) {
 			$table->dropForeign('orders_customer_id_foreign');
 		});
+		Schema::table('orders', function(Blueprint $table) {
+			$table->dropForeign('orders_menu_id_foreign');
+		});
 		Schema::table('subcategories', function(Blueprint $table) {
 			$table->dropForeign('subcategories_category_id_foreign');
 		});
@@ -120,9 +123,6 @@ class CreateForeignKeys extends Migration {
 		});
 		Schema::table('order_product', function(Blueprint $table) {
 			$table->dropForeign('order_product_order_id_foreign');
-		});
-		Schema::table('order_product', function(Blueprint $table) {
-			$table->dropForeign('order_product_menu_id_foreign');
 		});
 	}
 }

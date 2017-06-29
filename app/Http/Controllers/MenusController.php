@@ -3,45 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Menu;
+use Symfony\Component\HttpFoundation\Response;
 
 class MenusController extends Controller
 {
-    public function getById ($id)
+    public function getCategories ($id, $categoryId = null)
     {
-        $withOrder = false;
+        $resp = $this->defaultGetRelationResultOfId(Menu::class, $id, Category::class, 'categories', $categoryId);
 
-        $menu = Menu::where('id', $id);
-
-        if ($this->request->has("with")) {
-            $withArr = explode(",", $this->request->get("with"));
-            $withArr = array_filter($withArr, function ($v) {
-                return $v != "orders";
-            });
-
-            $withOrder = str_contains($this->request->get('with'), 'orders');
-
-            $menu = $menu->with($withArr);
-        }
-
-        $menu = $menu->first();
-        $array = $menu->toArray();
-
-        if ($withOrder === true) {
-            $array['orders'] = $menu->getOrders();
-        }
-
-        return response()->json($array);
+        return response()->json($resp->getData(), $resp->getCode());
     }
 
 
-    public function getCategories ($id)
+    public function syncMenuToCategories ($id)
     {
         // TODO
+        return response()->json(null, Response::HTTP_NOT_IMPLEMENTED);
     }
 
 
-    public function getOrders ($id)
+    public function getOrders ($id, $orderId = null)
     {
-        // TODO
+        $resp = $this->defaultGetRelationResultOfId(Menu::class, $id, Order::class, 'orders', $orderId);
+
+        return response()->json($resp->getData(), $resp->getCode());
     }
 }

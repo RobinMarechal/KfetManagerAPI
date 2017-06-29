@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class UrlRequest extends Request
@@ -44,6 +45,24 @@ class UrlRequest extends Request
             }
         }
 
+        $modelClassName = '\\' . $class;
+        $temporalField = (new $modelClassName())->temporalField;
+
+        if (isset($temporalField) && $temporalField != null) {
+            $from = $this->has("()from") ? Carbon::parse($this->get("from")) : null;
+            $to = $this->has("to") ? Carbon::parse($this->get("to")) : null;
+
+            if (isset($from) && isset($to)) {
+                $query = $query->whereBetween($temporalField, [$from, $to]);
+            }
+            else if ($this->has("from")) {
+                $query = $query->where($temporalField, '>=', $from);
+            }
+            else if ($this->has("to")) {
+                $query = $query->where($temporalField, '<=', $to);
+            }
+        }
+
         return $query;
     }
 
@@ -61,7 +80,7 @@ class UrlRequest extends Request
     }
 
 
-    public function computeUrlParams (&$query)
+    public function applyUrlParams (&$query, $class)
     {
         if ($this->has("with")) {
             $withArr = explode(",", $this->get('with'));
@@ -84,7 +103,26 @@ class UrlRequest extends Request
                 $query = $query->orderBy($this->get("orderby"));
             }
         }
+
+        $modelClassName = '\\' . $class;
+        $temporalField = (new $modelClassName())->temporalField;
+
+        if (isset($temporalField) && $temporalField != null) {
+            $from = $this->has("from") ? Carbon::parse($this->get("from")) : null;
+            $to = $this->has("to") ? Carbon::parse($this->get("to")) : null;
+
+            if (isset($from) && isset($to)) {
+                $query = $query->whereBetween($temporalField, [$from, $to]);
+            }
+            else if ($this->has("from")) {
+                $query = $query->where($temporalField, '>=', $from);
+            }
+            else if ($this->has("to")) {
+                $query = $query->where($temporalField, '<=', $to);
+            }
+        }
     }
+
 
     public function userWantsAll ()
     {

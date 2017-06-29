@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Custom\Model;
 
 class Restocking extends Model 
 {
@@ -10,7 +10,7 @@ class Restocking extends Model
     protected $table = 'restockings';
     public $timestamps = false;
     protected $fillable = array('date', 'cost', 'description');
-    protected $hidden = ['pivot'];
+    public $temporalField = 'date';
 
     public function products()
     {
