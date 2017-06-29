@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Customer;
 use App\Menu;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,4 +29,12 @@ class MenusController extends Controller
 
         return response()->json($resp->getData(), $resp->getCode());
     }
+
+    public function getCustomers ($id, $customerId = null)
+    {
+        $resp = $this->defaultGetRelationResultOfId(Menu::class, $id, Customer::class, 'customers', $customerId);
+        return response()->json($resp->getData(), $resp->getCode());
+    }
+
+
 }

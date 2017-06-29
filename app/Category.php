@@ -18,7 +18,7 @@ class Category extends Model
 
     public function menus()
     {
-        return $this->belongsToMany('App\Menu');
+        return $this->belongsToMany('App\Menu')->withPivot('id');
     }
 
 }

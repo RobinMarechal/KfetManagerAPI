@@ -13,7 +13,7 @@ class Product extends Model
 
     public function restockings()
     {
-        return $this->belongsToMany('App\Restocking');
+        return $this->belongsToMany('App\Restocking')->withPivot(['id', 'quantity']);
     }
 
     public function subcategory()
@@ -33,12 +33,12 @@ class Product extends Model
 
     public function events()
     {
-        return $this->belongsToMany('App\Event');
+        return $this->belongsToMany('App\Event')->withPivot(['id', 'cost', 'price', 'quantity_sold', 'quantity_bought', 'name']);
     }
 
     public function orders()
     {
-        return $this->belongsToMany('App\Order');
+        return $this->belongsToMany('App\Order')->withPivot(['id', 'quantity']);
     }
 
 }

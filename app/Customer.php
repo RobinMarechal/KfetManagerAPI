@@ -21,4 +21,9 @@ class Customer extends Model
         return $this->belongsTo('App\Staff');
     }
 
+
+    public function menus ()
+    {
+        return $this->belongsToMany('App\Menu', 'orders')->withPivot('id')->withTimestamps();
+    }
 }
