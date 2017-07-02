@@ -4,16 +4,21 @@ namespace App;
 
 use App\Custom\Model;
 
-class Staff extends Model 
+class Staff extends Model
 {
-
     protected $table = 'staff';
     public $timestamps = false;
-    protected $fillable = array('firstname', 'lastname', 'email', 'role');
+    protected $fillable = ['firstname', 'lastname', 'email', 'role'];
 
-    public function customer()
+
+    public function customer ()
     {
         return $this->hasOne('App\Customer');
     }
 
+
+    public function scopeWithAll ($query)
+    {
+        return $query->with('customer');
+    }
 }

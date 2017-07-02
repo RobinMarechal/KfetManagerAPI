@@ -26,4 +26,9 @@ class Customer extends Model
     {
         return $this->belongsToMany('App\Menu', 'orders')->withPivot('id')->withTimestamps();
     }
+
+    public function scopeWithAll($query)
+    {
+        return $query->with('orders', 'staff', 'menus');
+    }
 }

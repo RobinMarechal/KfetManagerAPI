@@ -12,4 +12,9 @@ class MoneyAdding extends Model
     protected $fillable = array('date', 'amount', 'reason', 'description');
     public $temporalField = 'date';
 
+    public function scopeWithAll($query)
+    {
+        // Nothing
+    }
+
 }

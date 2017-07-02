@@ -21,4 +21,9 @@ class Category extends Model
         return $this->belongsToMany('App\Menu')->withPivot('id');
     }
 
+    public function scopeWithAll($query)
+    {
+        return $query->with('subcategories', 'menus');
+    }
+
 }

@@ -6,7 +6,6 @@ use App\Custom\Model;
 
 class Restocking extends Model 
 {
-
     protected $table = 'restockings';
     public $timestamps = false;
     protected $fillable = array('date', 'cost', 'description');
@@ -17,4 +16,8 @@ class Restocking extends Model
         return $this->belongsToMany('App\Product')->withPivot(['id', 'quantity']);
     }
 
+    public function scopeWithAll($query)
+    {
+        return $query->with('products');
+    }
 }

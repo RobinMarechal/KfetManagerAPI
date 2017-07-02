@@ -4,19 +4,22 @@ namespace App;
 
 use App\Custom\Model;
 
-class Menu extends Model 
+class Menu extends Model
 {
 
     protected $table = 'menus';
     public $timestamps = false;
-    protected $fillable = array('name', 'description', 'price');
+    protected $fillable = ['name', 'description', 'price'];
 
-    public function categories()
+
+    public function categories ()
     {
-        return $this->belongsToMany('App\Category')->withPivot('id');
+        return $this->belongsToMany('App\Category')
+                    ->withPivot('id');
     }
 
-    public function orders()
+
+    public function orders ()
     {
         return $this->hasMany('App\Order');
     }
@@ -24,7 +27,15 @@ class Menu extends Model
 
     public function customers ()
     {
-        return $this->belongsToMany('App\Customer', 'orders')->withPivot('id')->withTimestamps();
+        return $this->belongsToMany('App\Customer', 'orders')
+                    ->withPivot('id')
+                    ->withTimestamps();
+    }
+
+
+    public function scopeWithAll ($query)
+    {
+        return $query->with('customers', 'categories', 'orders');
     }
 
 }

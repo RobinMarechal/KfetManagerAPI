@@ -11,4 +11,9 @@ class CategoryMenu extends Model
     public $timestamps = false;
     protected $fillable = array('menu_id', 'category_id');
 
+    public function scopeWithAll($query)
+    {
+        // Nothing
+    }
+
 }

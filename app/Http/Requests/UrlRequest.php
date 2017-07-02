@@ -80,8 +80,16 @@ class UrlRequest extends Request
     public function applyRelationsParameters (&$query)
     {
         if ($this->has("with")) {
-            $withArr = explode(",", $this->get('with'));
-            $query->with($withArr);
+            $with = $this->get("with");
+            if($with == "all" || $with == '*')
+            {
+                $query->withAll();
+            }
+            else
+            {
+                $withArr = explode(",", $this->get('with'));
+                $query->with($withArr);
+            }
         }
 
         return $query;

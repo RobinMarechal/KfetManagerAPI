@@ -16,4 +16,9 @@ class EventAccessory extends Model
         return $this->belongsTo('App\Event');
     }
 
+    public function scopeWithAll($query)
+    {
+        return $query->with('event');
+    }
+
 }

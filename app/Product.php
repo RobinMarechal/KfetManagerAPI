@@ -41,4 +41,9 @@ class Product extends Model
         return $this->belongsToMany('App\Order')->withPivot(['id', 'quantity']);
     }
 
+    public function scopeWithAll($query)
+    {
+        return $query->with('restockings', 'subcategory', 'eventProducts', 'events', 'orders');
+    }
+
 }

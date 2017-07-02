@@ -11,4 +11,9 @@ class ProductRestocking extends Model
     public $timestamps = false;
     protected $fillable = array('product_id', 'quantity', 'restocking_id');
 
+    public function scopeWithAll($query)
+    {
+        // Nothing
+    }
+
 }

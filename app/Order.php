@@ -34,7 +34,12 @@ class Order extends Model
 
     public function detail()
     {
-        return $this->hasMany('App\OrderProduct');
+        return $this->orderProducts();
     }
 
+
+    public function scopeWithAll($query)
+    {
+        return $query->with('customer', 'orderProducts', 'products');
+    }
 }
