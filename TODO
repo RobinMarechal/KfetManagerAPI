@@ -1,3 +1,4 @@
-- TRIGGERS
-
-- url anchors "only={field}"
+- TRIGGERS :
+    - on insert customer (staff)
+    - on insert event_product (products)
+    - on insert product (subcategory)

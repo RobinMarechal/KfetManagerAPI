@@ -12,7 +12,7 @@ class CreatePurchasesTable extends Migration {
 			$table->float('cost')->default('0');
 			$table->integer('quantity')->default('1');
 			$table->date('date')->nullable();
-			$table->text('description');
+			$table->text('description')->nullable();
 		});
 	}
 

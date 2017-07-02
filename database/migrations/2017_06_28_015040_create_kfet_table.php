@@ -1,5 +1,6 @@
 <?php
 
+use App\Kfet;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -16,6 +17,8 @@ class CreateKfetTable extends Migration {
 			$table->string('reason_table', 255)->nullable();
 			$table->enum('reason_type', array('INSERT', 'UPDATE', 'DELETE'))->nullable();
 		});
+
+		Kfet::create(['balance' => 0]);
 	}
 
 	public function down()

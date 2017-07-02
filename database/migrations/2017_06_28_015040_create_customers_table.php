@@ -9,9 +9,9 @@ class CreateCustomersTable extends Migration {
 	{
 		Schema::create('customers', function(Blueprint $table) {
 			$table->increments('id');
-			$table->string('firstname', 255);
-			$table->string('lastname', 255);
-			$table->integer('staff_id')->unsigned()->nullable();
+			$table->string('firstname', 255)->nullable();
+			$table->string('lastname', 255)->nullable();
+			$table->integer('staff_id')->unsigned()->nullable()->unique();
 			$table->float('balance')->default('0');
 		});
 	}

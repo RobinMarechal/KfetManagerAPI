@@ -10,8 +10,8 @@ class CreateProductsTable extends Migration {
 		Schema::create('products', function(Blueprint $table) {
 			$table->increments('id');
 			$table->string('name', 255)->unique();
-			$table->text('description');
-			$table->float('price')->default('0');
+			$table->text('description')->nullable();
+			$table->float('price')->nullable();
 			$table->integer('quantity')->default('0');
 			$table->integer('subcategory_id')->unsigned()->nullable();
 		});

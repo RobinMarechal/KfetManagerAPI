@@ -12,10 +12,10 @@ class CreateEventProductsTable extends Migration {
 			$table->integer('product_id')->unsigned()->nullable();
 			$table->integer('event_id')->unsigned()->nullable();
 			$table->float('cost')->default('0');
-			$table->float('price')->default('0');
+			$table->float('price')->nullable();
 			$table->integer('quantity_sold')->default('0');
 			$table->integer('quantity_bought')->default('0');
-			$table->string('name', 255);
+			$table->string('name', 255)->nullable();
 		});
 	}
 

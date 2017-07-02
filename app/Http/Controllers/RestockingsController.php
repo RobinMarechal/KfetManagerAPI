@@ -14,11 +14,4 @@ class RestockingsController extends Controller
 
         return response()->json($resp->getData(), $resp->getCode());
     }
-
-
-    public function syncRestokingToProducts ($id)
-    {
-        // TODO
-        return response()->json(null, Response::HTTP_NOT_IMPLEMENTED);
-    }
 }

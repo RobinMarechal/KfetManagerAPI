@@ -13,12 +13,18 @@ class Menu extends Model
 
     public function categories()
     {
-        return $this->belongsToMany('App\Category');
+        return $this->belongsToMany('App\Category')->withPivot('id');
     }
 
     public function orders()
     {
         return $this->hasMany('App\Order');
+    }
+
+
+    public function customers ()
+    {
+        return $this->belongsToMany('App\Customer', 'orders')->withPivot('id')->withTimestamps();
     }
 
 }

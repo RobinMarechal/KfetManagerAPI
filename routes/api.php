@@ -66,6 +66,8 @@ Route::prefix('menus')->group(function () {
     Route::get('/', 'MenusController@all')->name('menus.all'); // 200
     Route::post('/', 'MenusController@post')->name('menus.post'); // 200
 
+    Route::post('/', 'CategoryMenusController@post')->name('category_menu.post');
+
     Route::prefix('{id}')->group(function () {
         Route::get('/', 'MenusController@getById')->name('menus.getById'); // 200
         Route::put('/', 'MenusController@put')->name('menus.put'); // 200
@@ -73,11 +75,15 @@ Route::prefix('menus')->group(function () {
 
         Route::prefix('categories')->group(function () {
             Route::get('/{categoryId?}', 'MenusController@getCategories')->name('menus.getCategories'); // 200
-            Route::put('/', 'MenusController@syncMenuToCategories')->name('menus.syncMenuToCategories'); // 501
+//            Route::put('/', 'MenusController@syncMenuToCategories')->name('menus.syncMenuToCategories'); // 501
         });
 
         Route::prefix('orders')->group(function () {
             Route::get('/{orderId?}', 'MenusController@getOrders')->name('menus.getOrders'); // 200
+        });
+
+        Route::prefix('customers')->group(function () {
+            Route::get('/{customerId?}', 'MenusController@getCustomers')->name('menus.getCustomers');
         });
     });
 });
@@ -115,12 +121,18 @@ Route::prefix('customers')->group(function () {
             Route::get('/{orderId?}', 'CustomersController@getOrders')->name('customers.getOrders'); // 200
             Route::get('last', 'CustomersController@lastOrder')->name('customers.lastOrder'); // 200
         });
+
+        Route::prefix('menus')->group(function () {
+            Route::get('/{menuId?}', 'CustomersController@getMenus')->name('customers.getMenus');
+        });
     });
 });
 
 Route::prefix('orders')->group(function () {
     Route::get('/', 'OrdersController@all')->name('orders.all'); // 200
     Route::post('/', 'OrdersController@post')->name('order.post'); // 200
+
+    Route::post('products', 'OrderProductsController@addOrderProducts')->name('orders.addOrderProducts'); // 501
 
     Route::prefix('{id}')->group(function () {
         Route::get('/', 'OrdersController@getById')->name('orders.getById'); // 200
@@ -134,7 +146,6 @@ Route::prefix('orders')->group(function () {
         Route::prefix('products')->group(function()
         {
             Route::get('/{productId?}', 'OrdersController@getProducts')->name('orders.getProducts'); // 200
-            Route::post('/', 'OrdersController@addOrderProducts')->name('orders.addOrderProducts'); // 501
         });
 
         Route::prefix('detail')->group(function() // ALIAS
@@ -153,6 +164,8 @@ Route::prefix('products')->group(function () {
     Route::get('/', 'ProductsController@all')->name('products.all'); // 200
     Route::post('/', 'ProductsController@post')->name('products.post'); // 200
 
+    Route::post('orders', 'OrderProductsController@post')->name('orders_products.post'); // 501
+
     Route::prefix('{id}')->group(function () {
         Route::get('/', 'ProductsController@getById')->name('products.getById'); // 200
         Route::put('/', 'ProductsController@put')->name('products.put'); // 200
@@ -160,8 +173,6 @@ Route::prefix('products')->group(function () {
 
         Route::prefix('orders')->group(function () {
             Route::get('/{orderId?}', 'ProductsController@getOrders')->name('products.getOrders'); // 200
-
-            Route::post('/', 'ProductsController@addOrderProducts')->name('products.addOrderProducts'); // 501
         });
 
         Route::prefix('subcategory')->group(function () {
@@ -210,6 +221,8 @@ Route::prefix('restockings')->group(function () {
     Route::get('/', 'RestockingsController@all')->name('restockings.all'); // 200
     Route::post('/', 'RestockingsController@post')->name('restockings.post'); // 200
 
+    Route::post('products', 'ProductRestockingsController@post')->name('product_restockings.post'); // 501
+
     Route::prefix('{id}')->group(function () {
         Route::get('/', 'RestockingsController@getById')->name('restockings.getById'); // 200
         Route::put('/', 'RestockingsController@put')->name('restockings.put'); // 200
@@ -217,8 +230,6 @@ Route::prefix('restockings')->group(function () {
 
         Route::prefix('products')->group(function () {
             Route::get('/{productId?}', 'RestockingsController@getProducts')->name('restockings.getProducts'); // 200
-            Route::post('/', 'RestockingsController@syncRestokingToProducts') 
-                 ->name('restockings.syncRestokingToProducts'); // 501
         });
     });
 });

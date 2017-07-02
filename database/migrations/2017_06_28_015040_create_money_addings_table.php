@@ -12,7 +12,7 @@ class CreateMoneyAddingsTable extends Migration {
 			$table->date('date')->nullable();
 			$table->float('amount')->default('0');
 			$table->string('reason', 255);
-			$table->text('description');
+			$table->text('description')->nullable();
 		});
 	}
 

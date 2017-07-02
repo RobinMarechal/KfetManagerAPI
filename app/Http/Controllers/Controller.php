@@ -30,12 +30,6 @@ abstract class Controller extends BaseController
     }
 
 
-    protected function getRelationsQuery ($class)
-    {
-        return $this->request->getRelationsQuery($class);
-    }
-
-
     /*
      * ------------------------------------------------------------------
      * ------------------------------------------------------------------
@@ -51,9 +45,9 @@ abstract class Controller extends BaseController
 
     public function defaultGetById ($class, $id)
     {
-        $cat = $this->getRelationsQuery($class)->find($id);
+        $res = $this->getPreparedQuery($class)->find($id);
 
-        return new ResponseData($cat, Response::HTTP_OK);
+        return new ResponseData($res, Response::HTTP_OK);
     }
 
 

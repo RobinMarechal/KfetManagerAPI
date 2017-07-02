@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Carbon\Carbon;
+use function explode;
 use Illuminate\Http\Request;
 
 class UrlRequest extends Request
@@ -14,7 +15,8 @@ class UrlRequest extends Request
     {
         parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
 
-        $this->post = $this->json()->all();
+        $this->post = $this->json()
+                           ->all();
     }
 
 
@@ -24,10 +26,9 @@ class UrlRequest extends Request
     }
 
 
-    public function getPreparedQuery ($class)
+    // ?....&limit=..&offset=...
+    public function applyLimitingParameters (&$query)
     {
-        $query = $this->getRelationsQuery($class);
-
         if ($this->has("limit")) {
             $query = $query->take($this->get("limit"));
         }
@@ -35,7 +36,12 @@ class UrlRequest extends Request
         if ($this->has("offset")) {
             $query = $query->skip($this->get("offset"));
         }
+    }
 
+
+    // ?....&orderby=..&order=...
+    public function applyOrderingParameters (&$query)
+    {
         if ($this->has("orderby")) {
             if ($this->has("order")) {
                 $query = $query->orderBy($this->get("orderby"), $this->get("order"));
@@ -44,66 +50,12 @@ class UrlRequest extends Request
                 $query = $query->orderBy($this->get("orderby"));
             }
         }
-
-        $modelClassName = '\\' . $class;
-        $temporalField = (new $modelClassName())->temporalField;
-
-        if (isset($temporalField) && $temporalField != null) {
-            $from = $this->has("()from") ? Carbon::parse($this->get("from")) : null;
-            $to = $this->has("to") ? Carbon::parse($this->get("to")) : null;
-
-            if (isset($from) && isset($to)) {
-                $query = $query->whereBetween($temporalField, [$from, $to]);
-            }
-            else if ($this->has("from")) {
-                $query = $query->where($temporalField, '>=', $from);
-            }
-            else if ($this->has("to")) {
-                $query = $query->where($temporalField, '<=', $to);
-            }
-        }
-
-        return $query;
     }
 
 
-    public function getRelationsQuery ($class)
+    // ?....&from=..&to=...
+    public function applyTemporalParameters (&$query, $class)
     {
-        $query = $class::query();
-
-        if ($this->has("with")) {
-            $withArr = explode(",", $this->get('with'));
-            $query->with($withArr);
-        }
-
-        return $query;
-    }
-
-
-    public function applyUrlParams (&$query, $class)
-    {
-        if ($this->has("with")) {
-            $withArr = explode(",", $this->get('with'));
-            $query->with($withArr);
-        }
-
-        if ($this->has("limit")) {
-            $query = $query->take($this->get("limit"));
-        }
-
-        if ($this->has("offset")) {
-            $query = $query->skip($this->get("offset"));
-        }
-
-        if ($this->has("orderby")) {
-            if ($this->has("order")) {
-                $query = $query->orderBy($this->get("orderby"), $this->get("order"));
-            }
-            else {
-                $query = $query->orderBy($this->get("orderby"));
-            }
-        }
-
         $modelClassName = '\\' . $class;
         $temporalField = (new $modelClassName())->temporalField;
 
@@ -121,6 +73,48 @@ class UrlRequest extends Request
                 $query = $query->where($temporalField, '<=', $to);
             }
         }
+    }
+
+
+    // ?....&with=rel1,rel2,rel3.rel3rel...
+    public function applyRelationsParameters (&$query)
+    {
+        if ($this->has("with")) {
+            $withArr = explode(",", $this->get('with'));
+            $query->with($withArr);
+        }
+
+        return $query;
+    }
+
+
+    public function applyFieldSelectingParameters (&$query)
+    {
+        if ($this->has('fields')) {
+            $fields = $this->get('fields');
+            $arr = explode(',', $fields);
+            $query->select($arr);
+        }
+    }
+
+
+    public function getPreparedQuery ($class)
+    {
+        $query = $class::query();
+
+        $this->applyUrlParams($query, $class);
+
+        return $query;
+    }
+
+
+    public function applyUrlParams (&$query, $class)
+    {
+        $this->applyRelationsParameters($query);
+        $this->applyLimitingParameters($query);
+        $this->applyOrderingParameters($query);
+        $this->applyTemporalParameters($query, $class);
+        $this->applyFieldSelectingParameters($query);
     }
 
 
