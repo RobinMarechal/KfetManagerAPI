@@ -66,7 +66,7 @@ Route::prefix('menus')->group(function () {
     Route::get('/', 'MenusController@all')->name('menus.all'); // 200
     Route::post('/', 'MenusController@post')->name('menus.post'); // 200
 
-    Route::post('/', 'CategoryMenusController@post')->name('category_menu.post');
+    Route::post('/', 'CategoryMenusController@post')->name('category_menu.post'); // 501
 
     Route::prefix('{id}')->group(function () {
         Route::get('/', 'MenusController@getById')->name('menus.getById'); // 200
@@ -75,7 +75,6 @@ Route::prefix('menus')->group(function () {
 
         Route::prefix('categories')->group(function () {
             Route::get('/{categoryId?}', 'MenusController@getCategories')->name('menus.getCategories'); // 200
-//            Route::put('/', 'MenusController@syncMenuToCategories')->name('menus.syncMenuToCategories'); // 501
         });
 
         Route::prefix('orders')->group(function () {
@@ -132,7 +131,7 @@ Route::prefix('orders')->group(function () {
     Route::get('/', 'OrdersController@all')->name('orders.all'); // 200
     Route::post('/', 'OrdersController@post')->name('order.post'); // 200
 
-    Route::post('products', 'OrderProductsController@addOrderProducts')->name('orders.addOrderProducts'); // 501
+    Route::post('products', 'OrderProductsController@post')->name('order_products.post'); // 501
 
     Route::prefix('{id}')->group(function () {
         Route::get('/', 'OrdersController@getById')->name('orders.getById'); // 200
