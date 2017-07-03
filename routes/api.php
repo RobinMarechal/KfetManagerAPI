@@ -350,8 +350,6 @@ Route::prefix('restockings')->group(function () {
     Route::get('/', 'RestockingsController@all')->name('restockings.all'); // 200
     Route::post('/', 'RestockingsController@post')->name('restockings.post'); // 200
 
-
-
     Route::prefix('products')->group(function()
     {
         Route::get('/', 'ProductRestockingsController@all')->name('restockings.products.all');
