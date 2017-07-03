@@ -3,9 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UrlRequest;
+use function array_last;
+use function camel_case;
 use Carbon\Carbon;
+use function count;
+use function explode;
+use function getRelatedModelClassName;
 use Helpers\ResponseData;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use function is_array;
+use function is_null;
+use function is_numeric;
+use function str_singular;
+use function strlen;
+use function strpos;
+use function strtolower;
+use function strtoupper;
+use function substr;
+use Symfony\Component\Debug\Exception\UndefinedFunctionException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -37,7 +52,8 @@ abstract class Controller extends BaseController
 
     public function defaultAll ($class)
     {
-        $all = $this->getPreparedQuery($class)->get();
+        $all = $this->getPreparedQuery($class)
+                    ->get();
 
         return new ResponseData($all, Response::HTTP_OK);
     }
@@ -45,7 +61,8 @@ abstract class Controller extends BaseController
 
     public function defaultGetById ($class, $id)
     {
-        $res = $this->getPreparedQuery($class)->find($id);
+        $res = $this->getPreparedQuery($class)
+                    ->find($id);
 
         return new ResponseData($res, Response::HTTP_OK);
     }
@@ -111,23 +128,41 @@ abstract class Controller extends BaseController
         $toCarbon = Carbon::parse($to);
 
 
-        $array = $this->request->getPreparedQuery($class)->whereBetween($field, [$fromCarbon, $toCarbon])->get();
+        $array = $this->request->getPreparedQuery($class)
+                               ->whereBetween($field, [$fromCarbon, $toCarbon])
+                               ->get();
 
         return new ResponseData($array, Response::HTTP_OK);
     }
 
 
+    /**
+     * @param $class        string the model (usually associated with the current controller) class name
+     * @param $id           int the id of the resource
+     * @param $relationName string the relation name. This can be chained relations, separated with '.' character.
+     *
+     * @warning if chained relations, all of these (but the last) have to be BelongsTo relations (singular relations),
+     *          otherwise this will fail
+     * @return ResponseData the couple (json, Http code)
+     */
     public function defaultGetRelationResult ($class, $id, $relationName)
     {
         $model = $class::with([$relationName => function ($query) use ($class) {
             $this->request->applyUrlParams($query, $class);
-        }])->find($id);
+        }])
+                       ->find($id);
 
         if (!isset($model)) {
             return new ResponseData(null, Response::HTTP_NOT_FOUND);
         }
 
-        return new ResponseData($model->$relationName, Response::HTTP_OK);
+        $res = $model;
+        $rels = explode('.', $relationName);
+        foreach ($rels as $r) {
+            $res = $res->$r;
+        }
+
+        return new ResponseData($res, Response::HTTP_OK);
     }
 
 
@@ -137,16 +172,28 @@ abstract class Controller extends BaseController
             return $this->defaultGetRelationResult($class, $id, $relationName);
         }
 
+
         $tmp = $class::with([$relationName => function ($query) use ($relationId, $relationClass) {
             $this->request->applyUrlParams($query, $relationClass);
-        }])->where((new $class())->getTable() . '.id', $id)->first();
+        }])
+                     ->where((new $class())->getTable() . '.id', $id)
+                     ->first();
 
 
         if (!isset($tmp)) {
             return new ResponseData(null, Response::HTTP_NOT_FOUND);
         }
 
-        return new ResponseData($tmp->$relationName->where('id', "=", $relationId)->first(), Response::HTTP_OK);
+        $res = $tmp;
+        $rels = explode('.', $relationName);
+        foreach ($rels as $r) {
+            $res = $res->$r;
+        }
+
+        $res = $res->where('id', "=", $relationId)
+                   ->first();
+
+        return new ResponseData($res, Response::HTTP_OK);
     }
 
 
@@ -206,4 +253,48 @@ abstract class Controller extends BaseController
     }
 
 
+//    public function relations ($id, $params, $relatedId = null)
+//    {
+//        $relations = explode('/', $params);
+//
+//        $modelClassName = getRelatedModelClassName($this);
+//        $relatedModel = str_singular(array_last($relations));
+//        $relatedModel = 'App\\'.strtoupper(substr($relatedModel, 0, 1)) . substr($relatedModel, 1);
+//        $relationStr = join('.', $relations);
+//
+//        $resp = $this->defaultGetRelationResultOfId($modelClassName, $id, $relatedModel, $relationStr, $relatedId);
+//
+//        return $resp->getData();
+//    }
+
+
+    public function __call ($method, $parameters)
+    {
+        if (strpos($method, "get") == 0 && strlen($method) > 3 && is_array($parameters) && isset($parameters[0])) {
+            $relation = camel_case(substr($method, 3));
+
+            $relatedModelClassName = str_singular($relation);
+            $relatedModelClassName = strtoupper(substr($relatedModelClassName, 0, 1)) . substr($relatedModelClassName, 1);
+
+            $thisModelClassName = getRelatedModelClassName($this);
+
+            $id = $parameters[0];
+            $relatedId = null;
+            if (isset($parameters[1])) {
+                $relatedId = $parameters[1];
+            }
+
+            if (!is_numeric($id) || (isset($relatedId) && !is_numeric($relatedId))) {
+                GOTO FUNCTION_NOT_FOUND;
+            }
+
+            // Ok
+            $resp = $this->defaultGetRelationResultOfId($thisModelClassName, $id, $relatedModelClassName, $relation, $relatedId);
+
+            return response()->json($resp->getData(), $resp->getCode());
+        }
+
+        FUNCTION_NOT_FOUND:
+        throw new UndefinedFunctionException();
+    }
 }

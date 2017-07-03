@@ -196,12 +196,12 @@ Route::prefix('orders')->group(function () {
 
         Route::prefix('detail')->group(function() // ALIAS
         {
-            Route::get('/{orderProductId?}', 'OrdersController@getOrderProduct')->name('order.getOrderProduct_alias'); // 200
+            Route::get('/{orderProductId?}', 'OrdersController@getOrderProducts')->name('order.getOrderProduct_alias'); // 200
         });
 
         Route::prefix('orderProducts')->group(function()
         {
-            Route::get('/{orderProductId?}', 'OrdersController@getOrderProduct')->name('order.getOrderProduct'); // 200
+            Route::get('/{orderProductId?}', 'OrdersController@getOrderProducts')->name('order.getOrderProduct'); // 200
         });
     });
 });
@@ -268,6 +268,11 @@ Route::prefix('products')->group(function () {
             Route::get('/{orderId?}', 'ProductsController@getOrders')->name('products.getOrders'); // 200
         });
 
+        Route::prefix('orderProducts')->group(function()
+        {
+            Route::get('/{orderProductId?}', 'OrdersController@getOrderProducts')->name('order.getOrderProduct'); // 200
+        });
+
         Route::prefix('subcategory')->group(function () {
             Route::get('/', 'ProductsController@getSubcategory')->name('products.getSubcategory'); // 200
         });
@@ -276,12 +281,8 @@ Route::prefix('products')->group(function () {
             Route::get('/', 'ProductsController@getCategory')->name('products.getCategory'); // 200
         });
 
-        Route::prefix('menus')->group(function () {
-            Route::get('/{menuId?}', 'ProductsController@getMenus')->name('products.getMenus'); // 200
-        });
-
         Route::prefix('restockings')->group(function () {
-            Route::get('/{restockingId?}', 'ProductController@getRestockings')->name('products.getRestockings'); // 200
+            Route::get('/{restockingId?}', 'ProductsController@getRestockings')->name('products.getRestockings'); // 200
         });
 
         Route::prefix('events')->group(function()
@@ -342,6 +343,10 @@ Route::prefix('events')->group(function () {
 
         Route::prefix('event_products')->group(function () {
             Route::get('/{eventProductId?}', 'EventsController@getEventProducts')->name('events.getEventProducts'); // 200
+        });
+
+        Route::prefix('eventProducts')->group(function () {
+            Route::get('/{eventProductId?}', 'EventsController@getEventProducts')->name('events.getEventProducts_alias'); // 200
         });
     });
 });

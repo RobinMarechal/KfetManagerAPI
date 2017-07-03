@@ -16,4 +16,16 @@ class ProductRestocking extends Model
         // Nothing
     }
 
+
+    public function product ()
+    {
+        return $this->belongsTo('App\Product');
+    }
+
+
+    public function restocking ()
+    {
+        return $this->belongsTo('App\Restocking');
+    }
+
 }

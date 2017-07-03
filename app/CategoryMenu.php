@@ -16,4 +16,15 @@ class CategoryMenu extends Model
         // Nothing
     }
 
+
+    public function category ()
+    {
+        return $this->belongsTo('App\Category');
+    }
+
+    public function menu ()
+    {
+        return $this->belongsTo('App\Menu');
+    }
+
 }

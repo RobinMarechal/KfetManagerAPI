@@ -6,6 +6,7 @@ use App\Category;
 use App\Menu;
 use App\Product;
 use App\Subcategory;
+use function getRelatedModelClassName;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,25 +16,12 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CategoriesController extends Controller
 {
-    public function getMenus ($id, $menuId = null)
-    {
-        $resp = $this->defaultGetRelationResultOfId(Category::class, $id, Menu::class, 'menus', $menuId);
-        return response()->json($resp->getData(), $resp->getCode());
-    }
-
-
-    public function getSubcategories ($id, $subcategoryId = null)
-    {
-        $resp = $this->defaultGetRelationResultOfId(Category::class, $id, Subcategory::class, 'subcategories', $subcategoryId);
-        return response()->json($resp->getData(), $resp->getCode());
-    }
-
-
     public function getProducts ($id, $productId = null)
     {
         $cat = Category::with(['subcategories.products' => function ($query) {
             $this->request->applyUrlParams($query, Product::class);
-        }])->find($id);
+        }])
+                       ->find($id);
 
         if (!isset($cat)) {
             return null;
@@ -55,7 +43,8 @@ class CategoriesController extends Controller
         }
 
         if ($productId != null) {
-            $res = $coll->where('id', $productId)->first();
+            $res = $coll->where('id', $productId)
+                        ->first();
         }
         else {
             $res = $coll;
