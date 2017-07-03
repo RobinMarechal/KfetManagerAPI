@@ -68,5 +68,12 @@ class ProductsController extends Controller
         return response()->json($resp->getData(), $resp->getCode());
     }
 
+    public function getEvents($id, $eventId = null)
+    {
+        $resp = $this->defaultGetRelationResultOfId(Product::class, $id, Restocking::class, 'events', $eventId);
+        
+        return response()->json($resp->getData(), $resp->getCode());
+    }
+
 
 }

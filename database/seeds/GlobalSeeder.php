@@ -275,7 +275,7 @@ class GlobalSeeder extends Seeder
 
     private function event_products ()
     {
-        EventProduct::create(['event_id' => $this->event1->id, 'product_id' => $this->prod_chips_bbq->id, 'cost' => 1, 'quantity_bought' => 50]);
+        EventProduct::create(['event_id' => $this->event1->id, 'product_id' => $this->prod_chips_bbq->id, 'cost' => 0.3, 'quantity_bought' => 50]);
         EventProduct::create(['event_id' => $this->event1->id, 'cost' => 1.5, 'quantity_bought' => 50, 'price' => 3, 'name' => 'saucisse']);
 
         EventProduct::create(['event_id' => $this->event2->id, 'cost' => 1.5, 'quantity_bought' => 80, 'price' => 3.2, 'name' => 'saucisse']);

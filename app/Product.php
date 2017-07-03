@@ -33,7 +33,7 @@ class Product extends Model
 
     public function events()
     {
-        return $this->belongsToMany('App\Event')->withPivot(['id', 'cost', 'price', 'quantity_sold', 'quantity_bought', 'name']);
+        return $this->belongsToMany('App\Event', 'event_products')->withPivot(['id', 'cost', 'price', 'quantity_sold', 'quantity_bought', 'name']);
     }
 
     public function orders()

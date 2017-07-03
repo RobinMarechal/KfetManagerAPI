@@ -22,6 +22,24 @@ Route::prefix('kfet')->group(function () {
 Route::prefix('categories')->group(function () {
     Route::get('/', 'CategoriesController@all')->name('categories.all'); // 200
     Route::post('/', 'CategoriesController@post')->name('categories.post'); // 200
+
+    Route::prefix('menus')->group(function()
+    {
+        Route::get('/', 'CategoryMenusController@all')->name('categories.menus.all');
+        Route::post('/', 'CategoryMenusController@post')->name('categories.menus.post'); // 200
+
+        Route::prefix('{id}')->group(function () {
+            Route::get('/', 'CategoryMenusController@getById')->name('categories.menus.getById'); // 200
+            Route::put('/', 'CategoryMenusController@put')->name('categories.menus.put'); // 200
+            Route::delete('/', 'CategoryMenusController@delete')->name('categories.menus.delete'); // 200
+
+            Route::get('menu', 'CategoryMenusController@getMenu')->name('categories.menus.getMenu');
+
+            Route::get('category', 'CategoryMenusController@getCategory')->name('categories.menus.getCategory');
+        });
+        
+    });
+
     Route::prefix('{id}')->group(function () {
 
         Route::get('/', 'CategoriesController@getById')->name('categories.getById'); // 200
@@ -66,7 +84,21 @@ Route::prefix('menus')->group(function () {
     Route::get('/', 'MenusController@all')->name('menus.all'); // 200
     Route::post('/', 'MenusController@post')->name('menus.post'); // 200
 
-    Route::post('/', 'CategoryMenusController@post')->name('category_menu.post'); // 501
+    Route::prefix('categories')->group(function()
+    {
+        Route::get('/', 'CategoryMenusController@all')->name('menus.categories.all');
+        Route::post('/', 'CategoryMenusController@post')->name('menus.categories.post'); // 200
+
+        Route::prefix('{id}')->group(function () {
+            Route::get('/', 'CategoryMenusController@getById')->name('menus.categories.getById'); // 200
+            Route::put('/', 'CategoryMenusController@put')->name('menus.categories.put'); // 200
+            Route::delete('/', 'CategoryMenusController@delete')->name('menus.categories.delete'); // 200
+
+            Route::get('menu', 'CategoryMenusController@getMenu')->name('menus.categories.getMenu');
+
+            Route::get('category', 'CategoryMenusController@getCategory')->name('menus.categories.getCategory');
+        });
+    });
 
     Route::prefix('{id}')->group(function () {
         Route::get('/', 'MenusController@getById')->name('menus.getById'); // 200
@@ -131,7 +163,22 @@ Route::prefix('orders')->group(function () {
     Route::get('/', 'OrdersController@all')->name('orders.all'); // 200
     Route::post('/', 'OrdersController@post')->name('order.post'); // 200
 
-    Route::post('products', 'OrderProductsController@post')->name('order_products.post'); // 501
+
+    Route::prefix('products')->group(function()
+    {
+        Route::get('/', 'OrderProductsController@all')->name('orders.products.all');
+        Route::post('/', 'OrderProductsController@post')->name('orders.products.post'); // 200
+
+        Route::prefix('{id}')->group(function () {
+            Route::get('/', 'OrderProductsController@getById')->name('orders.products.getById'); // 200
+            Route::put('/', 'OrderProductsController@put')->name('orders.products.put'); // 200
+            Route::delete('/', 'OrderProductsController@delete')->name('orders.products.delete'); // 200
+
+            Route::get('order', 'OrderProductsController@getOrder')->name('orders.products.getOrder');
+
+            Route::get('product', 'OrderProductsController@getProduct')->name('orders.products.getCategory');
+        });
+    });
 
     Route::prefix('{id}')->group(function () {
         Route::get('/', 'OrdersController@getById')->name('orders.getById'); // 200
@@ -163,7 +210,54 @@ Route::prefix('products')->group(function () {
     Route::get('/', 'ProductsController@all')->name('products.all'); // 200
     Route::post('/', 'ProductsController@post')->name('products.post'); // 200
 
-    Route::post('orders', 'OrderProductsController@post')->name('orders_products.post'); // 501
+
+    Route::prefix('orders')->group(function()
+    {
+        Route::get('/', 'OrderProductsController@all')->name('products.orders.all');
+        Route::post('/', 'OrderProductsController@post')->name('products.orders.post'); // 200
+
+        Route::prefix('{id}')->group(function () {
+            Route::get('/', 'OrderProductsController@getById')->name('products.orders.getById'); // 200
+            Route::put('/', 'OrderProductsController@put')->name('products.orders.put'); // 200
+            Route::delete('/', 'OrderProductsController@delete')->name('products.orders.delete'); // 200
+
+            Route::get('order', 'OrderProductsController@getOrder')->name('products.orders.getOrder');
+
+            Route::get('product', 'OrderProductsController@getProduct')->name('products.orders.getProduct');
+        });
+    });
+
+
+    Route::prefix('restockings')->group(function()
+    {
+        Route::get('/', 'ProductRestockingsController@all')->name('products.restockings.all');
+        Route::post('/', 'ProductRestockingsController@post')->name('products.restockings.post'); // 200
+
+        Route::prefix('{id}')->group(function () {
+            Route::get('/', 'ProductRestockingsController@getById')->name('products.restockings.getById'); // 200
+            Route::put('/', 'ProductRestockingsController@put')->name('products.restockings.put'); // 200
+            Route::delete('/', 'ProductRestockingsController@delete')->name('products.restockings.delete'); // 200
+
+            Route::get('product', 'ProductRestockingsController@getProduct')->name('products.restockings.getProduct');
+
+            Route::get('restocking', 'ProductRestockingsController@getRestocking')->name('products.restockings.getRestocking');
+        });
+    });
+
+    Route::prefix('events')->group(function()
+    {
+        Route::get('/', 'EventProductsController@all')->name('products.events.all');
+        Route::post('/', 'EventProductsController@post')->name('products.events.post');
+
+        Route::prefix('{id}')->group(function () {
+            Route::get('/', 'EventProductsController@getById')->name('products.events.getById'); // 200
+            Route::put('/', 'EventProductsController@put')->name('products.events.put'); // 200
+            Route::delete('/', 'EventProductsController@delete')->name('products.events.delete'); // 200
+
+            Route::get('event', 'EventProductsController@getEvent')->name('products.events.getEvent'); // 200
+            Route::get('product', 'EventProductsController@getProduct')->name('products.events.getProduct'); // 200
+        });
+    });
 
     Route::prefix('{id}')->group(function () {
         Route::get('/', 'ProductsController@getById')->name('products.getById'); // 200
@@ -189,6 +283,13 @@ Route::prefix('products')->group(function () {
         Route::prefix('restockings')->group(function () {
             Route::get('/{restockingId?}', 'ProductController@getRestockings')->name('products.getRestockings'); // 200
         });
+
+        Route::prefix('events')->group(function()
+        {
+            Route::get('/{eventId?}', 'ProductsController@getEvents')->name('products.getEvents');
+        });
+
+
     });
 });
 
@@ -196,6 +297,35 @@ Route::prefix('products')->group(function () {
 Route::prefix('events')->group(function () {
     Route::get('/', 'EventsController@all')->name('events.all'); // 200
     Route::post('/', 'EventsController@post')->name('events.post'); // 200
+
+    Route::prefix('accessories')->group(function()
+    {
+        Route::get('/', 'EventAccessoriesController@all')->name('events.accessories.all');
+        Route::post('/', 'EventAccessoriesController@post')->name('events.accessories.post');
+
+        Route::prefix('{id}')->group(function () {
+            Route::get('/', 'EventAccessoriesController@getById')->name('events.accessories.getById'); // 200
+            Route::put('/', 'EventAccessoriesController@put')->name('events.accessories.put'); // 200
+            Route::delete('/', 'EventAccessoriesController@delete')->name('events.accessories.delete'); // 200
+
+            Route::get('event', 'EventAccessoriesController@getEvent')->name('events.accessories.getEvent'); // 200
+        });
+    });
+
+    Route::prefix('products')->group(function()
+    {
+        Route::get('/', 'EventProductsController@all')->name('events.products.all');
+        Route::post('/', 'EventProductsController@post')->name('events.products.post');
+
+        Route::prefix('{id}')->group(function () {
+            Route::get('/', 'EventProductsController@getById')->name('events.products.getById'); // 200
+            Route::put('/', 'EventProductsController@put')->name('events.products.put'); // 200
+            Route::delete('/', 'EventProductsController@delete')->name('events.products.delete'); // 200
+
+            Route::get('event', 'EventProductsController@getEvent')->name('events.products.getEvent'); // 200
+            Route::get('product', 'EventProductsController@getProduct')->name('events.products.getProduct'); // 200
+        });
+    });
 
     Route::prefix('{id}')->group(function () {
         Route::get('/', 'EventsController@getById')->name('events.getById'); // 200
@@ -220,7 +350,23 @@ Route::prefix('restockings')->group(function () {
     Route::get('/', 'RestockingsController@all')->name('restockings.all'); // 200
     Route::post('/', 'RestockingsController@post')->name('restockings.post'); // 200
 
-    Route::post('products', 'ProductRestockingsController@post')->name('product_restockings.post'); // 501
+
+
+    Route::prefix('products')->group(function()
+    {
+        Route::get('/', 'ProductRestockingsController@all')->name('restockings.products.all');
+        Route::post('/', 'ProductRestockingsController@post')->name('restockings.products.post'); // 200
+
+        Route::prefix('{id}')->group(function () {
+            Route::get('/', 'ProductRestockingsController@getById')->name('restockings.products.getById'); // 200
+            Route::put('/', 'ProductRestockingsController@put')->name('restockings.products.put'); // 200
+            Route::delete('/', 'ProductRestockingsController@delete')->name('restockings.products.delete'); // 200
+
+            Route::get('product', 'ProductRestockingsController@getProduct')->name('restockings.products.getProduct');
+
+            Route::get('restocking', 'ProductRestockingsController@getRestocking')->name('restockings.products.getRestocking');
+        });
+    });
 
     Route::prefix('{id}')->group(function () {
         Route::get('/', 'RestockingsController@getById')->name('restockings.getById'); // 200
